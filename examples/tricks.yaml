@@ -1,0 +1,56 @@
+# examples/tricks.yaml — tier 0: phrase → actions, no model.
+#
+# The daemon re-reads this file when its mtime changes, so adding a phrase needs no
+# restart. A trick that does not validate is logged and skipped; a file that will not
+# parse at all leaves the daemon on the last good set.
+#
+# Matching: `phrases` are compared against the WHOLE utterance, case- and punctuation-
+# insensitive ("Movie night." == "movie night"); `regex` is searched.
+#
+# Action kinds (router/tricks.py): ha, ha_assist, kodi, shell, script, say, curator.
+# shell/script get confirm: true forced unless the trick says readonly: true.
+# Entity ids below are placeholders.
+
+- name: lights on
+  phrases: ["lights on", "turn on the lights", "all lights on"]
+  actions:
+    - ha: {service: script.turn_on, entity_id: script.lights_on}
+  enabled: true
+
+- name: lights off
+  phrases: ["lights off", "turn off the lights"]
+  actions:
+    - ha: {service: script.turn_on, entity_id: script.lights_off}
+  enabled: true
+
+- name: movie night
+  phrases: ["movie night", "movie time"]
+  actions:
+    - ha: {service: light.turn_off, entity_id: light.living_room}
+    - say: "Enjoy the movie."
+  enabled: true
+
+- name: fan on
+  regex: '^\W*(?:turn on the |)fan(?: on)?\W*$'
+  actions:
+    - ha: {service: switch.turn_on, entity_id: switch.desk_fan}
+  enabled: true
+
+- name: disk space
+  phrases: ["how much disk space", "disk space"]
+  actions:
+    - shell: ["sh", "-c", "df -h / | awk 'NR==2{print $4\" free\"}'"]
+  readonly: true
+  enabled: true
+
+- name: stop the music
+  phrases: ["stop the music", "stop playback"]
+  actions:
+    - kodi: {transport: stop}
+  enabled: true
+
+- name: tidy downloads
+  phrases: ["tidy my downloads"]
+  actions:
+    - curator: "move files older than 30 days in ~/Downloads into ~/Downloads/old"
+  enabled: true

@@ -1,0 +1,4 @@
+claude-agent-sdk>=0.2
+mcp>=1.0
+pyyaml>=6
+pytest>=8
