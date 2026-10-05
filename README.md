@@ -2,6 +2,8 @@
 
 A voice front end that answers each spoken request at the cheapest tier that can handle it. Plain commands never touch a model, questions get one Claude Haiku call, and only real jobs start a Claude Agent SDK session. Any session that wants to change something asks out loud first.
 
+> **Status: in testing.** The production system this comes from runs every day; this extracted version passes its tests and has been run against the live models, but it is still being tested and changed.
+
 I built it for my own desk and it has been in daily use since August 2026. This repo is the routing core pulled out of that system and cleaned up so it runs on its own. Home-specific parts (Home Assistant entity ids, the Kodi library matcher, the wake word and speech pipeline) are not included; see [What is not in this repo](#what-is-not-in-this-repo).
 
 ## The problem
