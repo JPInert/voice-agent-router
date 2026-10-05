@@ -6,6 +6,10 @@ A voice front end that answers each spoken request at the cheapest tier that can
 
 I built it for my own desk and it has been in daily use since August 2026. This repo is the routing core pulled out of that system and cleaned up so it runs on its own. Home-specific parts (Home Assistant entity ids, the Kodi library matcher, the wake word and speech pipeline) are not included; see [What is not in this repo](#what-is-not-in-this-repo).
 
+## Why I built it
+
+I wanted the Star Trek computer at my desk. Say "computer" from anywhere in the room and get things done: lights, the TV, "get the car ready", or "why won't the printer print". A smart speaker covers the first few, but it can't touch my own desktop, my scripts or my car, and a raw LLM with a shell is slow, costs money on every "lights off", and is one misheard TV line away from doing something I didn't ask for. So I built the part in between: a router that sends each request to the cheapest thing that can handle it, and asks before anything changes.
+
 ## The problem
 
 A wake word plus an LLM is easy to build and expensive to live with. If every "lights off" goes to a model you pay a few seconds and a token bill for something a regex could do. You also hand a model a shell because someone on the TV said "computer". I wanted three things:
