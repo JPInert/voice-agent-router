@@ -55,7 +55,7 @@ def main():
             continue
         if a.dry_run:
             h = heuristic(text)
-            print('  rung 1: heuristic -> device job (no model)' if h else
+            print('  rung 1 skipped: keyword says device job -> rung 2 worker' if h else
                   '  rung 1: would go to Haiku to classify')
             continue
         r = router.utterance(text)

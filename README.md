@@ -2,21 +2,19 @@
 
 A voice front end that answers each spoken request at the cheapest tier that can handle it. Plain commands never touch a model, questions get one Claude Haiku call, and only real jobs start a Claude Agent SDK session. Any session that wants to change something asks out loud first.
 
-> **Status: in testing.** The production system this comes from runs every day; this extracted version passes its tests and has been run against the live models, but it is still being tested and changed.
-
-I built it for my own desk and it has been in daily use since August 2026. This repo is the routing core pulled out of that system and cleaned up so it runs on its own. Home-specific parts (Home Assistant entity ids, the Kodi library matcher, the wake word and speech pipeline) are not included; see [What is not in this repo](#what-is-not-in-this-repo).
+> **Status: work in progress.** The system this comes from runs at my desk every day and keeps changing. This extracted core passes its tests and has run against the live models, but expect rough edges and breaking changes.
 
 ## Why I built it
 
 I wanted the Star Trek computer at my desk. Say "computer" from anywhere in the room and get things done: lights, the TV, "get the car ready", or "why won't the printer print". A smart speaker covers the first few, but it can't touch my own desktop, my scripts or my car, and a raw LLM with a shell is slow, costs money on every "lights off", and is one misheard TV line away from doing something I didn't ask for. So I built the part in between: a router that sends each request to the cheapest thing that can handle it, and asks before anything changes.
 
-## The problem
-
-A wake word plus an LLM is easy to build and expensive to live with. If every "lights off" goes to a model you pay a few seconds and a token bill for something a regex could do. You also hand a model a shell because someone on the TV said "computer". I wanted three things:
+What I wanted:
 
 1. Commands I say every day run instantly and cost nothing.
 2. Questions get a short spoken answer, grounded in the machine's actual state.
 3. Real work (pair the headphones, find out why the printer is offline) gets an agent with tools, but nothing that writes, deletes or sends runs without a clear spoken yes.
+
+It has been in daily use since August 2026. This repo is the routing core pulled out of that system and cleaned up so it runs on its own. Home-specific parts (Home Assistant entity ids, the Kodi library matcher, the wake word and speech pipeline) are not included; see [What is not in this repo](#what-is-not-in-this-repo).
 
 ## How it works
 
@@ -56,7 +54,7 @@ The tool roster is passed as `tools=`, never `allowed_tools=`. An `allowed_tools
 
 ## Measured in production
 
-From the live logs, 2026-09-07 to 2026-10-05 (4 weeks, one desk, one user). `tools/measure_log.py` reproduces every number here from the raw logs, and its docstring lists exactly which log lines count as what.
+From the live logs, 2026-09-07 to 2026-10-05 (4 weeks, one desk, one user). `tools/measure_log.py` reproduces every number here from the raw logs (not published: they are a transcript of my house), and its docstring lists exactly which log lines count as what.
 
 | | n | share |
 |---|---:|---:|
@@ -75,11 +73,11 @@ What happened to the ones that reached the model tiers:
 | ...judged `unclear` and dropped | 34 |
 | ...handed to a worker as a device job | 2 |
 | Rung-1 calls that timed out (all in one run, during the lock-up below) | 6 |
-| Short device commands routed by the heuristic, no model | 2 |
+| Short device commands that skipped rung 1 by keyword (straight to a worker) | 2 |
 | Rung-2 Haiku agent sessions | 3 |
 | Rung-3 Sonnet sessions | **0** |
 
-The 56 posts outnumber the 51 rung-1 and heuristic decisions because some went straight to the hands-free coding mode (not in this repo) without a rung-1 call.
+The 56 posts outnumber the 51 rung-1 and keyword decisions because some went straight to the hands-free coding mode ([talk2code](https://github.com/JPInert/talk2code)) without a rung-1 call.
 
 Two things stand out. Most of what reaches rung 1 is not a command at all: it is TV dialogue or room conversation that tripped the wake word, and rung 1 is the cheap filter that keeps it away from anything with tools. And in four weeks nothing needed Sonnet; every model call that did run was Haiku. Rung-1 latency was a median of 2.94 s, p90 3.88 s (n=43).
 
@@ -101,7 +99,7 @@ The best bug this system has had, and the reason `server.py` has the health chec
 
 Each of these is a comment next to the code it changed.
 
-- **One clarifying question, then stop.** It used to ask up to two follow-up questions. In the log, every second-round answer came back `unclear` too, because those chains start on room conversation and each question just records more of the room. Now rung 1 gets one shot.
+- **One clarifying question, then stop.** It used to ask up to two follow-up questions. In the log, all 5 second-round answers came back `unclear` too, because those chains start on room conversation and each question just records more of the room. Now rung 1 gets one shot.
 - **Haiku sometimes tries to call a tool when told to classify** an imperative ("make me a file..."). With no tools and `max_turns=1` the query died. `max_turns=2` lets it recover.
 - **The done-check demanded raw command output** it could never see, judged the job unfinished, and the user heard the same answer twice. The prompt now says the worker's report of a command's output is the record.
 - **"Find another way"** as the denial message made the worker retry the same write as a bigger compound command. The message now says stop.
@@ -125,7 +123,7 @@ python3 server.py                    # POST /utterance {"text": "..."} on 127.0.
   [ha] light.turn_off {'entity_id': 'light.living_room'}
   [say] Enjoy the movie.
 > dim the bedroom lamp
-  rung 1: heuristic -> device job (no model)
+  rung 1 skipped: keyword says device job -> rung 2 worker
 > what is the capital of France
   rung 1: would go to Haiku to classify
 ```
@@ -157,7 +155,7 @@ examples/tricks.yaml    sample tricks (placeholder entity ids)
 
 ## What is not in this repo
 
-The production system around this core: the wake-word and speech daemon (openWakeWord, faster-whisper, a reSpeaker mic array, TTS, wake-confirmation gates tuned against recordings made in the room), the hand-coded intents for my media library and lights, the Home Assistant and Kodi clients, a session registry that lets the voice reach into Claude Code tabs already open on the desktop, and a hands-free "let's code" mode that speaks a live Claude Code session. They are tied to one house and one set of devices, and the routing logic here is the part that carries over.
+The production system around this core: the wake-word and speech daemon (openWakeWord, faster-whisper, a reSpeaker mic array, TTS, wake-confirmation gates tuned against recordings made in the room), the hand-coded intents for my media library and lights, the Home Assistant and Kodi clients, a session registry that lets the voice reach into Claude Code tabs already open on the desktop, and a hands-free "let's code" mode that speaks a live Claude Code session (published separately as [talk2code](https://github.com/JPInert/talk2code)). They are tied to one house and one set of devices, and the routing logic here is the part that carries over.
 
 ## Built with Claude Code
 
