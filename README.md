@@ -157,6 +157,23 @@ examples/tricks.yaml    sample tricks (placeholder entity ids)
 
 The production system around this core: the wake-word and speech daemon (openWakeWord, faster-whisper, a reSpeaker mic array, TTS, wake-confirmation gates tuned against recordings made in the room), the hand-coded intents for my media library and lights, the Home Assistant and Kodi clients, a session registry that lets the voice reach into Claude Code tabs already open on the desktop, and a hands-free "let's code" mode that speaks a live Claude Code session (published separately as [talk2code](https://github.com/JPInert/talk2code)). They are tied to one house and one set of devices, and the routing logic here is the part that carries over.
 
+## Around the router
+
+Separate repos that plug into it, each runnable on its own:
+
+| Repo | What it adds |
+|---|---|
+| [talk2code](https://github.com/JPInert/talk2code) | Hands-free voice over a live Claude Code terminal tab: talk to the same session you type in |
+| [android-dsp-wakeword](https://github.com/JPInert/android-dsp-wakeword) | The same "computer" wake word on a phone's low-power audio DSP, screen off, handing what you said to the desk's voice assistant, which routes it here |
+| [tesla-fleet-voice](https://github.com/JPInert/tesla-fleet-voice) | Car commands for the router through my own Tesla Fleet API app, plus charge and left-unlocked alerts that never poll the car awake |
+
+## In testing, not in this repo yet
+
+- **Phone misses go to an agent instead of a search page.** Since Oct 10, a phone command that matches no phrase starts an Agent SDK session with its own house tools (lights, car, calendar), in place of the phone's stock assistant. Anything that would send something outside the house is blocked. It is excluded from the numbers above, which stop on Oct 5.
+- **A memory layer for the "unclear" rung.** Instead of "I didn't get that", one Haiku call decides whether it was being spoken to and answers if so, a nightly reflection keeps a diary, and facts it infers wait for my yes before they are saved. Recall runs on a local search index (SQLite FTS5 plus a small embedding model).
+
+Both will land here once they have enough real use to measure and the household-specific parts are out.
+
 ## Built with Claude Code
 
 I designed, debugged and tuned this with Claude Code as my pair, and the system itself runs on the Claude Agent SDK. The lock-up above was tracked down in a Claude Code session working from the logs and process stats. I think that is the honest way to describe how this kind of automation gets built now, and it is a large part of the work I do.
