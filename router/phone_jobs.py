@@ -51,8 +51,8 @@ class PhoneJobs:
                 self.log(f'phone claude {jid}: {e.__class__.__name__}')
             job['done'].set()
 
-        threading.Thread(target=run, daemon=True).start()
         self.log(f'phone claude {jid}: in the background')
+        threading.Thread(target=run, daemon=True).start()
         return jid
 
     def collect(self, jid, wait_s=80):

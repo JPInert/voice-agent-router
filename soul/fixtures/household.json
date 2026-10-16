@@ -1,0 +1,84 @@
+{
+  "_about": "SYNTHETIC. An invented household (Sam, Robin and a cat called Mochi) written for this repo. Nothing here was heard in a real home. Days are offsets from 'today' so the fixtures never age out.",
+  "user_name": "Sam",
+  "profile": [
+    "- Sam lives with Robin and a cat called Mochi.",
+    "- Bakes sourdough on Sundays; practises the cello most evenings before dinner.",
+    "- Grows tomatoes and basil on the balcony.",
+    "- Runs on Tuesday and Friday mornings."
+  ],
+  "memory": [
+    {"days_ago": 12, "fact": "The spare key lives in the blue bowl by the front door."},
+    {"days_ago": 9, "fact": "Mochi's vet appointment is the first Thursday of the month."}
+  ],
+  "thoughts": [
+    {"days_ago": 6, "time": "21:10", "source": "reflection", "text": "Sam asks for quiet music around the time the cello comes out."},
+    {"days_ago": 3, "time": "07:45", "source": "reply", "text": "The balcony tomatoes come up whenever the weather turns warm."}
+  ],
+  "ideas": [
+    {"days_ago": 5, "time": "04:12", "source": "reflection", "text": "Offer a timer that can be set by saying only a number of minutes."}
+  ],
+  "diary": {
+    "-2": "A quiet day at home. Sam baked sourdough in the afternoon and asked for the oven timer twice. Robin asked about the weather for the weekend. The house missed one timer request that gave only a number."
+  },
+  "days": {
+    "-1": [
+      {"t": "07:02", "kind": "heard", "text": "Hello there."},
+      {"t": "07:02", "kind": "routed", "what": "greeting", "text": "greeting reply"},
+      {"t": "07:03", "kind": "said", "text": "Hello there."},
+      {"t": "08:15", "kind": "heard", "text": "What's the weather tomorrow?"},
+      {"t": "08:15", "kind": "said", "text": "Cloudy in the morning, light rain by the afternoon."},
+      {"t": "18:05", "kind": "heard", "text": "Lights on in the living room."},
+      {"t": "18:05", "kind": "routed", "what": "lights", "text": "living room lights on"},
+      {"t": "18:06", "kind": "heard", "text": "The hall too."},
+      {"t": "18:06", "kind": "miss", "why": "unclear", "text": "The hall too."},
+      {"t": "21:30", "kind": "heard", "text": "Did you feed Mochi already?"}
+    ],
+    "-2": [
+      {"t": "10:40", "kind": "heard", "text": "Set a timer for ninety minutes."},
+      {"t": "10:40", "kind": "miss", "why": "unclear", "text": "Set a timer for ninety minutes."},
+      {"t": "10:41", "kind": "heard", "text": "Set a timer for ninety minutes for the sourdough."},
+      {"t": "10:41", "kind": "miss", "why": "unclear", "text": "Set a timer for ninety minutes for the sourdough."},
+      {"t": "15:20", "kind": "heard", "text": "What's the weather like this weekend?"},
+      {"t": "15:20", "kind": "said", "text": "Mild and dry until Sunday evening."},
+      {"t": "19:00", "kind": "heard", "text": "Play some cello music."},
+      {"t": "19:00", "kind": "routed", "what": "media", "text": "playing cello suites"}
+    ],
+    "-3": [
+      {"t": "07:30", "kind": "heard", "text": "Lights to forty percent."},
+      {"t": "07:30", "kind": "routed", "what": "lights", "text": "lights set to 40%"},
+      {"t": "12:10", "kind": "heard", "text": "Remember that the vet is on the first Thursday."},
+      {"t": "12:10", "kind": "said", "text": "Noted."},
+      {"t": "20:15", "kind": "heard", "text": "Play the harbour documentary."},
+      {"t": "20:15", "kind": "routed", "what": "media", "text": "playing the harbour documentary"}
+    ],
+    "-5": [
+      {"t": "08:00", "kind": "heard", "text": "Turn the thermostat down to eighteen."},
+      {"t": "08:00", "kind": "routed", "what": "thermostat", "text": "thermostat set to 18"},
+      {"t": "17:45", "kind": "heard", "text": "How long until the tomatoes need watering again?"},
+      {"t": "17:45", "kind": "miss", "why": "unclear", "text": "How long until the tomatoes need watering again?"}
+    ]
+  },
+  "capabilities": [
+    "\"lights on\", \"lights off\", \"lights 40\" for the living room and the hall",
+    "\"play <artist or show> music\" on the living room speaker",
+    "\"what's the weather\" and \"weather tomorrow\"",
+    "\"thermostat to 18\""
+  ],
+  "screen_cases": [
+    {"now": "The hall too.", "stage": "unclear", "expect": "speak",
+     "recent": ["heard: Lights on in the living room.", "house did (lights): living room lights on"]},
+    {"now": "Set a timer for twelve minutes.", "stage": "unclear", "expect": "speak", "recent": []},
+    {"now": "Why did it play the same song twice?", "stage": "unclear", "expect": "speak",
+     "recent": ["house did (media): playing folk radio", "house did (media): playing folk radio"]},
+    {"now": "Can you turn the radio up a bit?", "stage": "unclear", "expect": "speak", "recent": []},
+    {"now": "Did you put the recycling out last night?", "stage": "unclear", "expect": "silent", "recent": []},
+    {"now": "No, the blue one goes on the left.", "stage": "unclear", "expect": "silent", "recent": []},
+    {"now": "Anyway, she said the train was delayed by an hour.", "stage": "unclear", "expect": "silent", "recent": []},
+    {"now": "And now, back to our story: the keeper opens the letter.", "stage": "unclear", "expect": "silent", "recent": []},
+    {"now": "Pass me that, I'll hold it.", "stage": "unclear", "expect": "silent", "recent": []},
+    {"now": "Okay, see you then, bye.", "stage": "unclear", "expect": "silent", "recent": []},
+    {"now": "Thank you for calling, your call is important to us.", "stage": "unclear", "expect": "silent", "recent": []},
+    {"now": "Uh the cord for the thing over by the.", "stage": "unclear", "expect": "silent", "recent": []}
+  ]
+}

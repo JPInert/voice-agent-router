@@ -1,0 +1,13 @@
+# ~/.config/systemd/user/soul-nightly.timer
+# Enable with:  systemctl --user enable --now soul-nightly.timer
+# Persistent=true runs a missed night when the machine comes back up.
+
+[Unit]
+Description=soul nightly reflection, 04:10 every day
+
+[Timer]
+OnCalendar=*-*-* 04:10:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

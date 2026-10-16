@@ -1,0 +1,45 @@
+# soul.example.toml - copy to soul.toml and edit. Every key is optional; these are the defaults,
+# except where a line is commented out as an example. Point the CLI at it with
+#   python3 -m soul --config soul.toml ...      (or export SOUL_CONFIG=/path/to/soul.toml)
+
+# --- where things live ---------------------------------------------------------------------
+data_dir  = "~/.local/share/soul"     # the notebook, the events and soul.db (keep out of git: it is a diary; SOUL_DB=/path moves only soul.db)
+# model_dir = ""                      # "" = <data_dir>/models/bge-small-en-v1.5 (python3 -m soul get-model)
+
+# --- who and how it talks --------------------------------------------------------------------
+user_name = "the user"                # how the prompts refer to the person ("Sam", "Alex", ...)
+wake_word = "computer"                # what your voice front end listens for
+# One paragraph added to every prompt whose output is SPOKEN. Dialect, tone, things to keep verbatim:
+# spoken_style = "Write every word you say the way a friendly Canadian would say it aloud, without caricature. Keep names, titles and numbers exactly as given."
+
+# What the voice front end CAN do. The screen reads this so it can tell "say it like this" from
+# "I cannot do that yet". Build it from your own command list.
+capabilities = [
+  '"lights on", "lights off", "lights 40"',
+  '"play <artist> music"',
+  '"what is the weather"',
+]
+
+# --- models (any Anthropic model id) -----------------------------------------------------------
+screen_model  = "claude-haiku-4-5-20251001"   # one small, fast call per missed line
+recall_model  = "claude-haiku-4-5-20251001"
+nightly_model = "claude-sonnet-5"             # one larger call a night
+screen_timeout_s = 8.0                        # past this the fallback line is the answer
+recall_timeout_s = 14.0
+recent_window_s  = 300                        # how many seconds of "what just happened" the screen sees
+
+# --- memory ------------------------------------------------------------------------------------------
+embed_threads    = 2          # CPU threads for the embedding model
+context_min_sim  = 0.6        # a "from before" hit under this cosine is treated as room noise
+idea_dup_sim     = 0.86       # a new idea this close to a known one is dropped
+fact_dup_sim     = 0.85       # a proposed fact this close to a known/queued/rejected one is dropped
+question_dup_sim = 0.90
+fact_min_confidence = 0.6     # facts the nightly is less sure of than this are not even queued
+
+# --- speaking first: rare on purpose -----------------------------------------------------------------------
+share_per_day = [1, 3]        # a per-date draw between these, so a restart does not re-roll it
+share_gap_s   = 7200          # at least this long between two unprompted lines
+share_hours   = [9, 21]       # local hours it may volunteer anything
+share_after_talk_s = 600      # only within this long of the person talking to it
+question_prefix = "Something I've been wondering: "
+question_drop_days = 7        # a question asked and never answered is dropped after this many days

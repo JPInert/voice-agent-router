@@ -1,0 +1,24 @@
+# ~/.config/systemd/user/soul-nightly.service
+# Runs the nightly reflection for YESTERDAY. If the model call fails or returns something unusable the
+# job exits non-zero, and Restart=on-failure tries again every 30 minutes (up to 5 times in 3 hours)
+# instead of silently skipping the night. A finished night is detected by its diary file, so a retry
+# after a partial run never doubles the notes.
+#
+# Edit WorkingDirectory to the directory that CONTAINS the soul/ folder (ExecStart uses the .venv you
+# made there during install), and put
+#   ANTHROPIC_API_KEY=<your key>
+# in the file named by EnvironmentFile (chmod 600 it).
+
+[Unit]
+Description=soul nightly reflection (diary, thoughts, ideas, queued facts)
+StartLimitIntervalSec=3h
+StartLimitBurst=5
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/voice-agent-router
+Environment=SOUL_CONFIG=%h/.config/soul/soul.toml
+EnvironmentFile=-%h/.config/soul/env
+ExecStart=%h/voice-agent-router/.venv/bin/python -m soul nightly
+Restart=on-failure
+RestartSec=30min

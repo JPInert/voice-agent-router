@@ -180,6 +180,7 @@ tools/measure_phone_jobs.py  counts phone worker jobs from a daemon log
 examples/tricks.yaml    sample tricks (placeholder entity ids)
 docs/CAPABILITIES.md    the connectors: how each is reached, can it change state, what gates it
 docs/PHONE_WORKER.md    the phone worker: flow, permissions, numbers, how to run and extend
+soul/                   the memory layer: addressed-to-me screen, hybrid recall, nightly reflection, approval queue (own README)
 ```
 
 ## What is not in this repo
@@ -199,9 +200,11 @@ Separate repos that plug into it, each runnable on its own:
 | [tesla-fleet-voice](https://github.com/JPInert/tesla-fleet-voice) | Car commands for the router through my own Tesla Fleet API app, plus charge and left-unlocked alerts that never poll the car awake. `router/connectors/car.py` is the router's side of it: it drives that repo's `car.py` |
 | [tasker-remote-widgets](https://github.com/JPInert/tasker-remote-widgets) | Android home-screen widgets fed from the desk (the car's battery). Display only, no voice path |
 
-## In testing, not in this repo yet
+## The memory layer: `soul/`
 
-- **A memory layer for the "unclear" rung.** Instead of "I didn't get that", one Haiku call decides whether it was being spoken to and answers if so, a nightly reflection keeps a diary, and facts it infers wait for my yes before they are saved. Recall runs on a local search index (SQLite FTS5 plus a small embedding model).
+For the "unclear" rung, `soul/` replaces "I didn't get that". One Haiku call decides whether a missed line was meant for the assistant (unsure counts as no), recall runs on a local index (SQLite FTS5 plus a small embedding model), a nightly job reflects and keeps a diary, and facts it infers wait for my yes before they are saved (its own notebook thoughts do not). It speaks first rarely, inside quiet hours and a per-day quota.
+
+It is its own package with its own [README](soul/README.md), config and offline tests (108 pass). **Status: in testing.** The prompts were rewritten generic for this repo and have not been scored by a live model since; the measurements in its README were taken on the original wording and say so.
 
 
 ## Built with Claude Code

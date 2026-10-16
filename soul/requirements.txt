@@ -1,0 +1,8 @@
+# Python 3.11 or newer (tomllib; SQLite with FTS5, which the python.org and Debian/Ubuntu builds have).
+# Run and tested here with Python 3.13.5, numpy 2.4.6, onnxruntime 1.29.0, tokenizers 0.23.1.
+numpy
+onnxruntime
+tokenizers
+# Only for the live model calls (screen, recall answers, nightly). The tests and the demo never import it,
+# and it has not been run against the live API from this package.
+anthropic
